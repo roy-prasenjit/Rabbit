@@ -1,2 +1,0 @@
-# Rabbit
-College Mini Project
