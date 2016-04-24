@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.*;
+
 /**
  *
  * @author hp
@@ -50,9 +52,10 @@ public class GenerateDashboardServlet extends HttpServlet {
         // Get tweets from following
         allTweets = tweetService.getAlltweets();
         usertweets = tweetService.getUsertweets(user);
+        
         httpSession.setAttribute("allTweets", allTweets);
         httpSession.setAttribute("userTweets", usertweets);
-        response.sendRedirect("./dashboard.jsp");
+        response.sendRedirect("./jsp/dashboard-old.jsp");
         }
         else{
             response.setContentType("application/json;charset=UTF-8");
@@ -60,8 +63,12 @@ public class GenerateDashboardServlet extends HttpServlet {
             System.out.println(username);
             if(username!=null) 
                 usertweets = tweetService.getUsertweets(new User(username,""));
+            
             allTweets = tweetService.getAlltweets();
             PrintWriter printWriter = response.getWriter();
+            
+            JSONObject obj = new JSONObject();
+            
             
             printWriter.print("{\"all\" : " + allTweets + ","); 
             printWriter.print("\"user\" :" + usertweets + "}");

@@ -5,11 +5,12 @@
  */
 package com.mrcet.rabbit.controllers;
 
+import com.mrcet.rabbit.Beans.Tweet;
 import com.mrcet.rabbit.Beans.User;
-import com.mrcet.rabbit.services.LoginService;
-import com.mrcet.rabbit.services.impl.LoginServiceImpl;
+import com.mrcet.rabbit.services.TweetService;
+import com.mrcet.rabbit.services.impl.TweetServiceImpl;
 import java.io.IOException;
-import java.sql.SQLException;
+import java.io.PrintWriter;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -21,7 +22,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author hp
  */
-public class LoginServlet extends HttpServlet {
+public class TweetHandlerServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -34,39 +35,18 @@ public class LoginServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-            
-            
-            RequestDispatcher rd = null;
-            
-            String userName=request.getParameter("username");
-            String password=request.getParameter("password");
-            
-            User user=new User(userName,password);
-            LoginService loginService= new LoginServiceImpl();
-            boolean status = false;
-            try {
-                status = loginService.validateUser(user);
-            } catch (SQLException ex) {
-                //Log
-            } catch (ClassNotFoundException ex) {
-                //Log
-            }
-            catch(Exception e){
-                //Log
-            }
-            
-            System.out.println(status);
-            if(status == true){
-                HttpSession httpSession = request.getSession();
-                httpSession.setAttribute("username",user.getEmail());
-                rd = request.getRequestDispatcher("./generatedash");
-                rd.forward(request, response);
-            }
-            else{
-//                response.sendError(400, "Sorry, wrong username or password");
-                response.sendRedirect("./jsp/error.jsp");
-            }
-    }
+            HttpSession httpSession = request.getSession(false);
+            if(httpSession == null) response.sendRedirect("./jsp/error.jsp");
+            String tweetS = request.getParameter("tweet");
+            String username = (String)httpSession.getAttribute("username");
+            User user = new User();
+            user.setEmail(username);
+            Tweet tweet = new Tweet(tweetS,user);
+            TweetService tweetService = new TweetServiceImpl();
+            boolean status = tweetService.addTweet(tweet);
+            if(status) request.getRequestDispatcher("./generatedash").forward(request, response);
+            else response.sendRedirect("/logout");
+        }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

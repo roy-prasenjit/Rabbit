@@ -17,4 +17,5 @@ public interface TweetDAO {
     public abstract List<Tweet> getAlltweets();
     public abstract List<Tweet> getUsertweets(User user);
     public abstract List<Tweet> getTweetsfromFollowing(User user);
+    public boolean addTweet(Tweet tweet);
 }

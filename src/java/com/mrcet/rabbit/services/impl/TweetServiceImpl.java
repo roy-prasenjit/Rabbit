@@ -35,5 +35,10 @@ public class TweetServiceImpl implements TweetService{
         TweetDAO tweetDAO = new TweetDaoImpl();
         return tweetDAO.getTweetsfromFollowing(user);
     }
-    
+
+    @Override
+    public boolean addTweet(Tweet tweet) {
+        TweetDAO tweetDAO = new TweetDaoImpl();
+        return tweetDAO.addTweet(tweet);
+    }
 }

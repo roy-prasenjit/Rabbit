@@ -15,4 +15,5 @@ public class DBQueries {
    public static String ALL_TWEETS = "select * from rabbittweet order by id desc limit 50";
    public static String USER_TWEETS = "select * from rabbittweet where username=? order by id desc limit 50 ";
    public static String TWEETS_OF_FOLLOWING="";
+   public static String INSERT_NEW_TWEET = "INSERT INTO rabbittweet(tweet,username) VALUES(?,?)";
 }

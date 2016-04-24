@@ -36,7 +36,7 @@ public class TweetDaoImpl implements TweetDAO{
             ResultSet resultSet = pst.executeQuery();
             while(resultSet.next()){
                 String tweet = resultSet.getString("tweet");
-                User user = new User(resultSet.getString("username"),"");
+                User user = new User(resultSet.getString("username"),null);
                 Tweet temp = new Tweet(tweet,user);
                 allTweets.add(temp);
             }
@@ -80,6 +80,33 @@ public class TweetDaoImpl implements TweetDAO{
     @Override
     public List<Tweet> getTweetsfromFollowing(User user) {
         return null;
+    }
+
+    @Override
+    public boolean addTweet(Tweet tweet) {
+        Connection con = null;
+        boolean status = false;
+        try {
+            con = DBUtil.getConnection();
+            if(con != null){
+                String insertSQL = DBQueries.INSERT_NEW_TWEET;
+                PreparedStatement preparedStatement = con.prepareStatement(insertSQL);
+                preparedStatement.setString(1,tweet.getTweet());
+                preparedStatement.setString(2,tweet.getUser().getEmail());
+                int returnVal = preparedStatement.executeUpdate();
+                if(returnVal == 1){
+                    status = true;
+                }
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(UserDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }catch(SQLException ex){
+            Logger.getLogger(UserDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally{
+            DBUtil.closeConnection(con);
+        }
+        return status;
     }
     
 }

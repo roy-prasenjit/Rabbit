@@ -9,9 +9,10 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <meta http-equiv="refresh" content="5; url=<%out.print(request.getContextPath());%>/index.html" />
+        <title>Error Page</title>
     </head>
     <body>
-        <h3>Error Page</h3>
+        <h3>Something went wrong, please wait while the system refreshes</h3>
     </body>
 </html>
